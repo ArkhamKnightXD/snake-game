@@ -1,23 +1,23 @@
-package knight.arham;
+package knight.arkham;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import knight.arham.screens.MainMenuScreen;
+import knight.arkham.screens.GameScreen;
 
-public class Snake extends Game {
+public class SnakeGame extends Game {
 
-	public static Snake INSTANCE;
+	public static SnakeGame INSTANCE;
 
 	public SpriteBatch batch;
 	public BitmapFont font;
 
-	private int screenWidth;
-	private int screenHeight;
+	public int screenWidth;
+	public int screenHeight;
 
-	public Snake() {
+	public SnakeGame() {
 
 		INSTANCE = this;
 	}
@@ -34,6 +34,6 @@ public class Snake extends Game {
 		OrthographicCamera globalCamera = new OrthographicCamera();
 		globalCamera.setToOrtho(false, screenWidth, screenHeight);
 
-		setScreen(new MainMenuScreen(globalCamera));
+		setScreen(new GameScreen(globalCamera));
 	}
 }

@@ -1,8 +1,8 @@
-package knight.arham.lwjgl3;
+package knight.arkham.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import knight.arham.Snake;
+import knight.arkham.SnakeGame;
 
 public class Lwjgl3Launcher {
 	public static void main(String[] args) {
@@ -11,7 +11,7 @@ public class Lwjgl3Launcher {
 
 	private static void createApplication() {
 
-		new Lwjgl3Application(new Snake(), getDefaultConfiguration());
+		new Lwjgl3Application(new SnakeGame(), getDefaultConfiguration());
 	}
 
 	private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {

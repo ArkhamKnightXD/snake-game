@@ -1,9 +1,9 @@
-package knight.arham.gwt;
+package knight.arkham.gwt;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import knight.arham.Snake;
+import knight.arkham.SnakeGame;
 
 /** Launches the GWT application. */
 public class GwtLauncher extends GwtApplication {
@@ -17,6 +17,6 @@ public class GwtLauncher extends GwtApplication {
 
 		@Override
 		public ApplicationListener createApplicationListener () { 
-			return new Snake();
+			return new SnakeGame();
 		}
 }

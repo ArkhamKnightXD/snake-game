@@ -1,14 +1,14 @@
-package knight.arham.screens;
+package knight.arkham.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
-import knight.arham.Snake;
+import knight.arkham.SnakeGame;
 
 public class MainMenuScreen extends ScreenAdapter {
 
-	private final Snake game = Snake.INSTANCE;
+	private final SnakeGame game = SnakeGame.INSTANCE;
 
 	private final OrthographicCamera camera;
 
