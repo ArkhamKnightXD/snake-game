@@ -14,8 +14,8 @@ public class SnakeGame extends Game {
 	public SpriteBatch batch;
 	public BitmapFont font;
 
-	public int screenWidth;
-	public int screenHeight;
+	private int screenWidth;
+	private int screenHeight;
 
 	public SnakeGame() {
 
@@ -36,4 +36,9 @@ public class SnakeGame extends Game {
 
 		setScreen(new GameScreen(globalCamera));
 	}
+
+
+	public int getScreenWidth() { return screenWidth; }
+
+	public int getScreenHeight() { return screenHeight; }
 }
