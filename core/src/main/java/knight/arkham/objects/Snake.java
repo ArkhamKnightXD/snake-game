@@ -13,29 +13,29 @@ import knight.arkham.screens.GameScreen;
 
 public class Snake {
 
-    private Body snakeBody;
+    private final Body snakeBody;
     private float positionX;
     private float positionY;
     private float directionX;
     private float directionY;
-    private float speed;
+    private final float speed;
     private final int height;
     private final int width;
     private final Texture snakeTexture;
-    private GameScreen localGameScreen;
+    private final GameScreen gameScreen;
 
     //intento de body mientras no estoy utilizando fisicas
     private final Rectangle snakeFakeBody;
 
-    public Snake(GameScreen gameScreen) {
+    public Snake(GameScreen gameScreen, float positionX, float positionY) {
 
-        localGameScreen = gameScreen;
+        this.gameScreen = gameScreen;
 
-        this.positionX = Constants.MID_SCREEN_WIDTH;
-        this.positionY = Constants.MID_SCREEN_HEIGHT;
+        this.positionX = positionX;
+        this.positionY = positionY;
         //los elementos velocity se utilizan para determinar la direccion que ira el player
         // si es positivo ira derecha en X y para arriba en Y, sino sera lo contrario
-        this.directionX = 1;
+        this.directionX = 0;
         this.directionY = 0;
         //esta sera la velocidad del player con la que se movera
         this.speed = 7;
@@ -47,7 +47,7 @@ public class Snake {
         snakeTexture = new Texture("white.png");
 
         this.snakeBody = BodyHelper.createBody(positionX, positionY, width, height, false,
-                0,  localGameScreen.getWorld(), ContactType.SNAKE);
+                0,  gameScreen.getWorld(), ContactType.SNAKE);
     }
 
 
@@ -91,27 +91,9 @@ public class Snake {
     }
 
 
-    private void screenBoundary() {
-
-        if (positionX <= 0)
-            positionX = 0;
-
-        if (positionX >= Constants.FULL_SCREEN_WIDTH - 32)
-            positionX = Constants.FULL_SCREEN_WIDTH - 32;
-
-        if (positionY <= 0)
-            positionY = 0;
-
-        if (positionY >= Constants.FULL_SCREEN_HEIGHT - 32)
-            positionY = Constants.FULL_SCREEN_HEIGHT - 32;
-    }
-
-
     public void update(){
 
         snakeMovement();
-
-        screenBoundary();
     }
 
 
@@ -120,6 +102,13 @@ public class Snake {
         batch.draw(snakeTexture, positionX, positionY, width, height);
     }
 
+    public float getPositionX() { return positionX; }
+
+    public void setPositionX(float positionX) { this.positionX = positionX; }
+
+    public float getPositionY() { return positionY; }
+
+    public void setPositionY(float positionY) { this.positionY = positionY; }
 
     public Texture getSnakeTexture() { return snakeTexture; }
 
