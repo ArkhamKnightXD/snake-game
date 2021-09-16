@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Constants;
 import knight.arkham.helpers.ContactType;
@@ -13,7 +14,7 @@ import knight.arkham.screens.GameScreen;
 
 public class Snake {
 
-    private final Body snakeBody;
+    private final Body snakeHeadBody;
     private float positionX;
     private float positionY;
     private float directionX;
@@ -23,6 +24,8 @@ public class Snake {
     private final int width;
     private final Texture snakeTexture;
     private final GameScreen gameScreen;
+
+    private Array<SnakeBody> snakeBodies;
 
     //intento de body mientras no estoy utilizando fisicas
     private final Rectangle snakeFakeBody;
@@ -46,8 +49,10 @@ public class Snake {
 
         snakeTexture = new Texture("white.png");
 
-        this.snakeBody = BodyHelper.createBody(positionX, positionY, width, height, false,
+        this.snakeHeadBody = BodyHelper.createBody(positionX, positionY, width, height, false,
                 0,  gameScreen.getWorld(), ContactType.SNAKE);
+
+        this.snakeBodies = new Array<>();
     }
 
 
@@ -80,14 +85,14 @@ public class Snake {
             directionY = -1;
         }
 
-        positionX = snakeBody.getPosition().x * Constants.PIXELS_PER_METER - (width / 2);
-        positionY = snakeBody.getPosition().y * Constants.PIXELS_PER_METER - (height / 2);
+        positionX = snakeHeadBody.getPosition().x * Constants.PIXELS_PER_METER - (width / 2);
+        positionY = snakeHeadBody.getPosition().y * Constants.PIXELS_PER_METER - (height / 2);
 
         snakeFakeBody.x = positionX;
         snakeFakeBody.y = positionY;
 
         //aqui multiplico speed * velocity para indicar la velocidad y direccion que tendra mi player
-        this.snakeBody.setLinearVelocity(directionX * speed, directionY * speed);
+        this.snakeHeadBody.setLinearVelocity(directionX * speed, directionY * speed);
     }
 
 
@@ -102,15 +107,10 @@ public class Snake {
         batch.draw(snakeTexture, positionX, positionY, width, height);
     }
 
-    public float getPositionX() { return positionX; }
-
-    public void setPositionX(float positionX) { this.positionX = positionX; }
-
-    public float getPositionY() { return positionY; }
-
-    public void setPositionY(float positionY) { this.positionY = positionY; }
 
     public Texture getSnakeTexture() { return snakeTexture; }
 
     public Rectangle getSnakeFakeBody() { return snakeFakeBody; }
+
+    public Array<SnakeBody> getSnakeBodies() { return snakeBodies; }
 }
