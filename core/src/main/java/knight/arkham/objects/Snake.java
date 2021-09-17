@@ -24,8 +24,18 @@ public class Snake {
     private final int width;
     private final Texture snakeTexture;
     private final GameScreen gameScreen;
+    float bodyX = 0;
+    float bodyY = 0;
 
     private Array<SnakeBody> snakeBodies;
+
+    public float getPositionX() {
+        return positionX;
+    }
+
+    public float getPositionY() {
+        return positionY;
+    }
 
     //intento de body mientras no estoy utilizando fisicas
     private final Rectangle snakeFakeBody;
@@ -40,6 +50,8 @@ public class Snake {
         // si es positivo ira derecha en X y para arriba en Y, sino sera lo contrario
         this.directionX = 0;
         this.directionY = 0;
+        this.bodyX = 0;
+        this.bodyY = 0;
         //esta sera la velocidad del player con la que se movera
         this.speed = 7;
         this.width = 32;
@@ -50,7 +62,7 @@ public class Snake {
         snakeTexture = new Texture("white.png");
 
         this.snakeHeadBody = BodyHelper.createBody(positionX, positionY, width, height, false,
-                0,  gameScreen.getWorld(), ContactType.SNAKE);
+                0, gameScreen.getWorld(), ContactType.SNAKE);
 
         this.snakeBodies = new Array<>();
     }
@@ -61,28 +73,31 @@ public class Snake {
         //los else if son para evitar que se puedan cumplir mas
         // de 1 una condicion al mismo tiempo, es decir si presiono 2 teclas al mismo tiempo, solo se cumplira una condicion a la vez
         //Aqui debido a que tengo un speed definido simplemente debo alterar la direccion mediante los inputs
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && directionX != -1){
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && directionX != -1) {
 
             directionY = 0;
             directionX = 1;
-        }
-
-        else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && directionX != 1){
+            bodyX = snakeHeadBody.getPosition().x - 1;
+            bodyY = snakeHeadBody.getPosition().y;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && directionX != 1) {
 
             directionY = 0;
             directionX = -1;
-        }
-
-        else if(Gdx.input.isKeyPressed(Input.Keys.UP) && directionY != -1){
+            bodyX = snakeHeadBody.getPosition().x + 1;
+            bodyY = snakeHeadBody.getPosition().y;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.UP) && directionY != -1) {
 
             directionX = 0;
             directionY = 1;
-        }
-
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN) && directionY != 1){
+            bodyX = snakeHeadBody.getPosition().x;
+            bodyY = snakeHeadBody.getPosition().y + 1;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && directionY != 1) {
 
             directionX = 0;
             directionY = -1;
+            bodyX = snakeHeadBody.getPosition().x;
+            bodyY = snakeHeadBody.getPosition().y - 1;
         }
 
         positionX = snakeHeadBody.getPosition().x * Constants.PIXELS_PER_METER - (width / 2);
@@ -93,24 +108,45 @@ public class Snake {
 
         //aqui multiplico speed * velocity para indicar la velocidad y direccion que tendra mi player
         this.snakeHeadBody.setLinearVelocity(directionX * speed, directionY * speed);
+
+        for (SnakeBody body : snakeBodies) {
+
+            body.setPositionX(bodyX * Constants.PIXELS_PER_METER - (width / 2));
+            body.setPositionY(bodyY * Constants.PIXELS_PER_METER - (width / 2));
+
+            body.getSnakeHeadBody().setLinearVelocity(directionX * speed, directionY * speed);
+
+        }
     }
 
 
-    public void update(){
+    public void update() {
 
         snakeMovement();
     }
 
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch) {
 
         batch.draw(snakeTexture, positionX, positionY, width, height);
+        for (SnakeBody body : snakeBodies) {
+
+            body.render(batch);
+
+        }
+
     }
 
 
-    public Texture getSnakeTexture() { return snakeTexture; }
+    public Texture getSnakeTexture() {
+        return snakeTexture;
+    }
 
-    public Rectangle getSnakeFakeBody() { return snakeFakeBody; }
+    public Rectangle getSnakeFakeBody() {
+        return snakeFakeBody;
+    }
 
-    public Array<SnakeBody> getSnakeBodies() { return snakeBodies; }
+    public Array<SnakeBody> getSnakeBodies() {
+        return snakeBodies;
+    }
 }

@@ -14,6 +14,7 @@ import knight.arkham.SnakeGame;
 import knight.arkham.helpers.Constants;
 import knight.arkham.helpers.GameContactListener;
 import knight.arkham.objects.Snake;
+import knight.arkham.objects.SnakeBody;
 import knight.arkham.objects.Wall;
 
 import java.util.Random;
@@ -45,9 +46,9 @@ public class GameScreen extends ScreenAdapter {
         camera = globalCamera;
 
         snakeFoodTexture = new Texture("white.png");
-        snakeFoodBody = new Rectangle(400,400,32,32);
+        snakeFoodBody = new Rectangle(400, 400, 32, 32);
 
-        world = new World(new Vector2(0,0),false);
+        world = new World(new Vector2(0, 0), false);
         box2DDebugRenderer = new Box2DDebugRenderer();
 
         //poner siempre los objetos al final cuando se desee enviar un this, para asi asegurarnos que todos los elementos
@@ -70,10 +71,10 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    private void update(){
+    private void update() {
 
 //        Aqui defino que mi world correra a 60 fps
-        world.step(1/60f, 6, 2);
+        world.step(1 / 60f, 6, 2);
 
         //para que los box2d se visualicen correctamente con el debugrenderer camera.update debe de implementarse
         camera.update();
@@ -82,14 +83,13 @@ public class GameScreen extends ScreenAdapter {
 
 //        snakeBody.forEach(Snake::update);
 
-        if(snake.getSnakeFakeBody().overlaps(snakeFoodBody)){
+        if (snake.getSnakeFakeBody().overlaps(snakeFoodBody)) {
 
             snakeFoodRandomPositionGenerator();
-
-//            snakeBody.add(new Snake(this, snakeHead.getPositionX(), snakeHead.getPositionY()));
+            snake.getSnakeBodies().add(new SnakeBody(this, snake.getPositionX(), snake.getPositionY()));
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 
             dispose();
             Gdx.app.exit();
@@ -102,7 +102,7 @@ public class GameScreen extends ScreenAdapter {
         //la convencion es que el update se realice primero y luego se renderiza
         update();
 
-        ScreenUtils.clear(0,0,0,0);
+        ScreenUtils.clear(0, 0, 0, 0);
 
         game.batch.begin();
 
@@ -115,7 +115,7 @@ public class GameScreen extends ScreenAdapter {
 
         snake.render(game.batch);
 
-        game.batch.draw(snakeFoodTexture,snakeFoodBody.x,snakeFoodBody.y,snakeFoodBody.width,snakeFoodBody.height);
+        game.batch.draw(snakeFoodTexture, snakeFoodBody.x, snakeFoodBody.y, snakeFoodBody.width, snakeFoodBody.height);
 
         game.batch.end();
 
@@ -123,7 +123,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    private void snakeFoodRandomPositionGenerator(){
+    private void snakeFoodRandomPositionGenerator() {
 
         Random randomPosition = new Random();
         //the max position is the difference between widthScreen or heightScreen and the width and height
@@ -133,12 +133,12 @@ public class GameScreen extends ScreenAdapter {
         int minPositionY = 10;
         int maxPositionY = 608;
 
-        snakeFoodBody.x = randomPosition.nextInt(maxPositionX-minPositionX) + minPositionX;
-        snakeFoodBody.y = randomPosition.nextInt(maxPositionY-minPositionY) + minPositionY;
+        snakeFoodBody.x = randomPosition.nextInt(maxPositionX - minPositionX) + minPositionX;
+        snakeFoodBody.y = randomPosition.nextInt(maxPositionY - minPositionY) + minPositionY;
     }
 
 
-    public void gameOverScreen(){
+    public void gameOverScreen() {
 
         game.setScreen(new MainMenuScreen(camera));
     }
@@ -156,5 +156,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    public World getWorld() { return world; }
+    public World getWorld() {
+        return world;
+    }
 }
