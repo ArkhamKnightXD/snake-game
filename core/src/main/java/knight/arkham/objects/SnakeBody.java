@@ -2,39 +2,17 @@ package knight.arkham.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Body;
-import knight.arkham.helpers.BodyHelper;
-import knight.arkham.helpers.ContactType;
-import knight.arkham.screens.GameScreen;
 
 public class SnakeBody {
 
+//    private final Body body;
     private float positionX;
     private float positionY;
     private final int height;
     private final int width;
     private final Texture snakeBodyTexture;
-    private final Rectangle fakeBody;
-    private final Body snakeHeadBody;
 
-    public float getPositionX() {
-        return positionX;
-    }
-
-    public void setPositionX(float positionX) {
-        this.positionX = positionX;
-    }
-
-    public float getPositionY() {
-        return positionY;
-    }
-
-    public void setPositionY(float positionY) {
-        this.positionY = positionY;
-    }
-
-    public SnakeBody(GameScreen screen, float positionX, float positionY) {
+    public SnakeBody(float positionX, float positionY) {
 
         this.positionX = positionX;
         this.positionY = positionY;
@@ -42,23 +20,42 @@ public class SnakeBody {
         this.height = 32;
 
         snakeBodyTexture = new Texture("white.png");
-        fakeBody = new Rectangle(positionX, positionY, width, height);
-
-        this.snakeHeadBody = BodyHelper.createBody(positionX, positionY, width, height, false,
-                0, screen.getWorld(), ContactType.SNAKE);
     }
 
 
-    public void update(){
+    public void update(float headPositionX, float headPositionY, float directionX, float directionY, int bodyPartsCounter){
 
+        if (directionX == 1){
+
+            positionX = headPositionX - (bodyPartsCounter * 32);
+            positionY = headPositionY;
+        }
+
+        if (directionX == -1){
+
+            positionX = headPositionX + (bodyPartsCounter * 32);
+            positionY = headPositionY;
+        }
+
+        if (directionY == 1){
+
+            positionX = headPositionX;
+            positionY = headPositionY - (bodyPartsCounter * 32);
+        }
+
+        if (directionY == -1){
+
+            positionX = headPositionX;
+            positionY = headPositionY + (bodyPartsCounter * 32);
+        }
     }
 
-    public Body getSnakeHeadBody() {
-        return snakeHeadBody;
-    }
 
     public void render(SpriteBatch batch){
 
         batch.draw(snakeBodyTexture, positionX, positionY, width, height);
     }
+
+
+    public Texture getSnakeBodyTexture() { return snakeBodyTexture; }
 }

@@ -16,7 +16,6 @@ import knight.arkham.helpers.GameContactListener;
 import knight.arkham.objects.Snake;
 import knight.arkham.objects.SnakeBody;
 import knight.arkham.objects.Wall;
-
 import java.util.Random;
 
 public class GameScreen extends ScreenAdapter {
@@ -38,9 +37,6 @@ public class GameScreen extends ScreenAdapter {
     private final Wall rightWall;
     private final Wall leftWall;
 
-    private final GameContactListener gameContactListener;
-
-
     public GameScreen(OrthographicCamera globalCamera) {
 
         camera = globalCamera;
@@ -55,13 +51,12 @@ public class GameScreen extends ScreenAdapter {
         //de nuestra pantalla esten instanciados
         snake = new Snake(this, Constants.MID_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT);
 
-
         topWall = new Wall(Constants.MID_SCREEN_WIDTH, Constants.FULL_SCREEN_HEIGHT, Constants.FULL_SCREEN_WIDTH, 16, this);
         bottomWall = new Wall(Constants.MID_SCREEN_WIDTH, 0, Constants.FULL_SCREEN_WIDTH, 16, this);
         rightWall = new Wall(Constants.FULL_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT, this);
         leftWall = new Wall(0, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT, this);
 
-        gameContactListener = new GameContactListener(this);
+        GameContactListener gameContactListener = new GameContactListener(this);
 
         world.setContactListener(gameContactListener);
     }
@@ -81,12 +76,11 @@ public class GameScreen extends ScreenAdapter {
 
         snake.update();
 
-//        snakeBody.forEach(Snake::update);
 
-        if (snake.getSnakeFakeBody().overlaps(snakeFoodBody)) {
+        if (snake.getSnakeHeadFakeBody().overlaps(snakeFoodBody)) {
 
             snakeFoodRandomPositionGenerator();
-            snake.getSnakeBodies().add(new SnakeBody(this, snake.getPositionX(), snake.getPositionY()));
+            snake.getSnakeBodyParts().add(new SnakeBody(snake.getPositionX(), snake.getPositionY()));
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -110,8 +104,6 @@ public class GameScreen extends ScreenAdapter {
         leftWall.render(game.batch);
         rightWall.render(game.batch);
         bottomWall.render(game.batch);
-
-//        snakeBody.forEach(snakeBodyPart -> snakeBodyPart.render(game.batch));
 
         snake.render(game.batch);
 
@@ -146,6 +138,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void hide() {
 
+        dispose();
     }
 
     @Override
@@ -153,10 +146,9 @@ public class GameScreen extends ScreenAdapter {
 
         snake.getSnakeTexture().dispose();
         snakeFoodTexture.dispose();
+        snake.getSnakeBodyParts().forEach(snakeBody -> snakeBody.getSnakeBodyTexture().dispose());
     }
 
 
-    public World getWorld() {
-        return world;
-    }
+    public World getWorld() { return world; }
 }
