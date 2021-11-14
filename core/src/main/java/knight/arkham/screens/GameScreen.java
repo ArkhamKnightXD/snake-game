@@ -58,11 +58,22 @@ public class GameScreen extends ScreenAdapter {
 
         snake.update();
 
-        if (snake.getSnakeHeadFakeBody().overlaps(snakeFoodBody)) {
+        Rectangle snakeHead = snake.getSnakeHeadBody();
+
+        if (snakeHead.overlaps(snakeFoodBody)) {
 
             snakeFoodRandomPositionGenerator();
-            snake.getSnakeBodyParts().add(new SnakeBody(snake.getPositionX(), snake.getPositionY()));
+
+            snake.getSnakeBodyParts().add(new SnakeBody(snake.getPosition().x, snake.getPosition().y,
+                    snake.getDirection().x, snake.getDirection().y));
         }
+
+        if (snakeHead.overlaps(bottomWall.getWallBody()) || snakeHead.overlaps(topWall.getWallBody())
+                || snakeHead.overlaps(rightWall.getWallBody()) || snakeHead.overlaps(leftWall.getWallBody())){
+
+            gameOverScreen();
+        }
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 
@@ -125,5 +136,6 @@ public class GameScreen extends ScreenAdapter {
 
         snake.getSnakeTexture().dispose();
         snakeFoodTexture.dispose();
+        topWall.getWallTexture().dispose();
     }
 }
