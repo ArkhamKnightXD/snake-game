@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SnakeBody {
 
-//    private final Body body;
     private float positionX;
     private float positionY;
     private final int height;

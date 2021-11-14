@@ -39,11 +39,13 @@ public class MainMenuScreen extends ScreenAdapter {
 
 	@Override
 	public void hide() {
+
 		// This method is called when another screen replaces this one.
 	}
 
 	@Override
 	public void dispose() {
+
 		// Destroy screen's assets here.
 	}
 }

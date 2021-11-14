@@ -6,13 +6,9 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import knight.arkham.SnakeGame;
 import knight.arkham.helpers.Constants;
-import knight.arkham.helpers.GameContactListener;
 import knight.arkham.objects.Snake;
 import knight.arkham.objects.SnakeBody;
 import knight.arkham.objects.Wall;
@@ -29,9 +25,6 @@ public class GameScreen extends ScreenAdapter {
 
     private final Snake snake;
 
-    private final World world;
-    private final Box2DDebugRenderer box2DDebugRenderer;
-
     private final Wall topWall;
     private final Wall bottomWall;
     private final Wall rightWall;
@@ -44,21 +37,14 @@ public class GameScreen extends ScreenAdapter {
         snakeFoodTexture = new Texture("white.png");
         snakeFoodBody = new Rectangle(400, 400, 32, 32);
 
-        world = new World(new Vector2(0, 0), false);
-        box2DDebugRenderer = new Box2DDebugRenderer();
-
         //poner siempre los objetos al final cuando se desee enviar un this, para asi asegurarnos que todos los elementos
         //de nuestra pantalla esten instanciados
-        snake = new Snake(this, Constants.MID_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT);
+        snake = new Snake(Constants.MID_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT);
 
         topWall = new Wall(Constants.MID_SCREEN_WIDTH, Constants.FULL_SCREEN_HEIGHT, Constants.FULL_SCREEN_WIDTH, 16, this);
         bottomWall = new Wall(Constants.MID_SCREEN_WIDTH, 0, Constants.FULL_SCREEN_WIDTH, 16, this);
         rightWall = new Wall(Constants.FULL_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT, this);
         leftWall = new Wall(0, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT, this);
-
-        GameContactListener gameContactListener = new GameContactListener(this);
-
-        world.setContactListener(gameContactListener);
     }
 
     @Override
@@ -68,14 +54,9 @@ public class GameScreen extends ScreenAdapter {
 
     private void update() {
 
-//        Aqui defino que mi world correra a 60 fps
-        world.step(1 / 60f, 6, 2);
-
-        //para que los box2d se visualicen correctamente con el debugrenderer camera.update debe de implementarse
         camera.update();
 
         snake.update();
-
 
         if (snake.getSnakeHeadFakeBody().overlaps(snakeFoodBody)) {
 
@@ -110,8 +91,6 @@ public class GameScreen extends ScreenAdapter {
         game.batch.draw(snakeFoodTexture, snakeFoodBody.x, snakeFoodBody.y, snakeFoodBody.width, snakeFoodBody.height);
 
         game.batch.end();
-
-//        box2DDebugRenderer.render(world, camera.combined.scl(Constants.PIXELS_PER_METER));
     }
 
 
@@ -146,9 +125,5 @@ public class GameScreen extends ScreenAdapter {
 
         snake.getSnakeTexture().dispose();
         snakeFoodTexture.dispose();
-        snake.getSnakeBodyParts().forEach(snakeBody -> snakeBody.getSnakeBodyTexture().dispose());
     }
-
-
-    public World getWorld() { return world; }
 }

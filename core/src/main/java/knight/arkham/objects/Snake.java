@@ -5,16 +5,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
-import knight.arkham.helpers.BodyHelper;
-import knight.arkham.helpers.Constants;
-import knight.arkham.helpers.ContactType;
-import knight.arkham.screens.GameScreen;
 
 public class Snake {
 
-    private final Body snakeHeadBody;
     private float positionX;
     private float positionY;
     private float directionX;
@@ -27,7 +21,7 @@ public class Snake {
     //intento de body mientras no estoy utilizando fisicas
     private final Rectangle snakeHeadFakeBody;
 
-    public Snake(GameScreen gameScreen, float positionX, float positionY) {
+    public Snake(float positionX, float positionY) {
 
         this.positionX = positionX;
         this.positionY = positionY;
@@ -44,10 +38,7 @@ public class Snake {
 
         snakeTexture = new Texture("white.png");
 
-        this.snakeHeadBody = BodyHelper.createBody(positionX, positionY, width, height, false,
-                0, gameScreen.getWorld(), ContactType.SNAKE);
-
-        this.snakeBodyParts = new Array<>();
+        this.snakeBodyParts = new Array<SnakeBody>();
     }
 
 
@@ -74,14 +65,8 @@ public class Snake {
             directionY = -1;
         }
 
-        positionX = snakeHeadBody.getPosition().x * Constants.PIXELS_PER_METER - (width / 2);
-        positionY = snakeHeadBody.getPosition().y * Constants.PIXELS_PER_METER - (height / 2);
-
         snakeHeadFakeBody.x = positionX;
         snakeHeadFakeBody.y = positionY;
-
-        //aqui multiplico speed * velocity para indicar la velocidad y direccion que tendra mi player
-        snakeHeadBody.setLinearVelocity(directionX * speed, directionY * speed);
     }
 
 
