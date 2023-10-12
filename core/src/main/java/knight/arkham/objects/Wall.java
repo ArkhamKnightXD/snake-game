@@ -3,7 +3,6 @@ package knight.arkham.objects;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import knight.arkham.screens.GameScreen;
 
 public class Wall {
 
@@ -14,7 +13,7 @@ public class Wall {
     private final Texture wallTexture;
     private final Rectangle wallBody;
 
-    public Wall(float positionX, float positionY, int width, int height, GameScreen gameScreen) {
+    public Wall(float positionX, float positionY, int width, int height) {
 
         this.positionX = positionX;
         this.positionY = positionY;

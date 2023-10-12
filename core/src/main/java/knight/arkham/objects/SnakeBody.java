@@ -8,7 +8,6 @@ public class SnakeBody {
 
     private final Vector2 position;
     private final Vector2 direction;
-    private final float speed;
     private final int height;
     private final int width;
     private final Texture snakeBodyTexture;
@@ -18,7 +17,6 @@ public class SnakeBody {
         position = new Vector2(positionX, positionY);
         direction = new Vector2(directionX, directionY);
 
-        this.speed = 5;
         this.width = 32;
         this.height = 32;
 
@@ -30,7 +28,7 @@ public class SnakeBody {
 
         if (directionX > 0){
 
-            position.x = headPositionX - (bodyPartsCounter * 32);
+            position.x = headPositionX - (bodyPartsCounter * width);
             position.y = headPositionY;
 
             direction.x = directionX;
@@ -39,7 +37,7 @@ public class SnakeBody {
 
         if (directionX < 0){
 
-            position.x = headPositionX + (bodyPartsCounter * 32);
+            position.x = headPositionX + (bodyPartsCounter * width);
             position.y = headPositionY;
 
             direction.x = directionX;
@@ -49,7 +47,7 @@ public class SnakeBody {
         if (directionY > 0){
 
             position.x = headPositionX;
-            position.y = headPositionY - (bodyPartsCounter * 32);
+            position.y = headPositionY - (bodyPartsCounter * height);
 
             direction.x = 0;
             direction.y = directionY;
@@ -58,7 +56,7 @@ public class SnakeBody {
         if (directionY < 0){
 
             position.x = headPositionX;
-            position.y = headPositionY + (bodyPartsCounter * 32);
+            position.y = headPositionY + (bodyPartsCounter * height);
 
             direction.x = 0;
             direction.y = directionY;

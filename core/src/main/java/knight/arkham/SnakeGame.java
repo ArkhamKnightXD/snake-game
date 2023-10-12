@@ -31,10 +31,7 @@ public class SnakeGame extends Game {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 
-		OrthographicCamera globalCamera = new OrthographicCamera();
-		globalCamera.setToOrtho(false, screenWidth, screenHeight);
-
-		setScreen(new GameScreen(globalCamera));
+		setScreen(new GameScreen());
 	}
 
 

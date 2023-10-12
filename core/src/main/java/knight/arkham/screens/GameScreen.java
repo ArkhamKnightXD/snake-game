@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class GameScreen extends ScreenAdapter {
 
-    private final SnakeGame game = SnakeGame.INSTANCE;
+    private final SnakeGame game;
 
     private final OrthographicCamera camera;
 
@@ -30,9 +30,10 @@ public class GameScreen extends ScreenAdapter {
     private final Wall rightWall;
     private final Wall leftWall;
 
-    public GameScreen(OrthographicCamera globalCamera) {
+    public GameScreen() {
 
-        camera = globalCamera;
+        game = SnakeGame.INSTANCE;
+        camera = new OrthographicCamera(game.getScreenWidth(), game.getScreenHeight());
 
         snakeFoodTexture = new Texture("white.png");
         snakeFoodBody = new Rectangle(400, 400, 32, 32);
@@ -41,10 +42,10 @@ public class GameScreen extends ScreenAdapter {
         //de nuestra pantalla esten instanciados
         snake = new Snake(Constants.MID_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT);
 
-        topWall = new Wall(Constants.MID_SCREEN_WIDTH, Constants.FULL_SCREEN_HEIGHT, Constants.FULL_SCREEN_WIDTH, 16, this);
-        bottomWall = new Wall(Constants.MID_SCREEN_WIDTH, 0, Constants.FULL_SCREEN_WIDTH, 16, this);
-        rightWall = new Wall(Constants.FULL_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT, this);
-        leftWall = new Wall(0, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT, this);
+        topWall = new Wall(Constants.MID_SCREEN_WIDTH, Constants.FULL_SCREEN_HEIGHT, Constants.FULL_SCREEN_WIDTH, 16);
+        bottomWall = new Wall(Constants.MID_SCREEN_WIDTH, 0, Constants.FULL_SCREEN_WIDTH, 16);
+        rightWall = new Wall(Constants.FULL_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT);
+        leftWall = new Wall(0, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT);
     }
 
     @Override
@@ -53,8 +54,6 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void update() {
-
-        camera.update();
 
         snake.update();
 
