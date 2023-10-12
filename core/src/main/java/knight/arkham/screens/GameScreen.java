@@ -5,18 +5,22 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import knight.arkham.SnakeGame;
-import knight.arkham.helpers.Constants;
 import knight.arkham.objects.Snake;
 import knight.arkham.objects.SnakeBody;
 import knight.arkham.objects.Wall;
 import java.util.Random;
 
+import static knight.arkham.helpers.Constants.*;
+
 public class GameScreen extends ScreenAdapter {
 
     private final SnakeGame game;
+
+    private final SpriteBatch batch;
 
     private final OrthographicCamera camera;
 
@@ -33,24 +37,21 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen() {
 
         game = SnakeGame.INSTANCE;
-        camera = new OrthographicCamera(game.getScreenWidth(), game.getScreenHeight());
+        camera = game.camera;
+
+        batch = new SpriteBatch();
 
         snakeFoodTexture = new Texture("white.png");
         snakeFoodBody = new Rectangle(400, 400, 32, 32);
 
         //poner siempre los objetos al final cuando se desee enviar un this, para asi asegurarnos que todos los elementos
         //de nuestra pantalla esten instanciados
-        snake = new Snake(Constants.MID_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT);
+        snake = new Snake(MID_SCREEN_WIDTH, MID_SCREEN_HEIGHT);
 
-        topWall = new Wall(Constants.MID_SCREEN_WIDTH, Constants.FULL_SCREEN_HEIGHT, Constants.FULL_SCREEN_WIDTH, 16);
-        bottomWall = new Wall(Constants.MID_SCREEN_WIDTH, 0, Constants.FULL_SCREEN_WIDTH, 16);
-        rightWall = new Wall(Constants.FULL_SCREEN_WIDTH, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT);
-        leftWall = new Wall(0, Constants.MID_SCREEN_HEIGHT, 16, Constants.FULL_SCREEN_HEIGHT);
-    }
-
-    @Override
-    public void show() {
-
+        topWall = new Wall(MID_SCREEN_WIDTH, FULL_SCREEN_HEIGHT, FULL_SCREEN_WIDTH, 16);
+        bottomWall = new Wall(MID_SCREEN_WIDTH, 0, FULL_SCREEN_WIDTH, 16);
+        rightWall = new Wall(FULL_SCREEN_WIDTH, MID_SCREEN_HEIGHT, 16, FULL_SCREEN_HEIGHT);
+        leftWall = new Wall(0, MID_SCREEN_HEIGHT, 16, FULL_SCREEN_HEIGHT);
     }
 
     private void update() {
@@ -70,7 +71,6 @@ public class GameScreen extends ScreenAdapter {
         if (snakeHead.overlaps(bottomWall.getWallBody()) || snakeHead.overlaps(topWall.getWallBody())
                 || snakeHead.overlaps(rightWall.getWallBody()) || snakeHead.overlaps(leftWall.getWallBody())){
 
-            gameOverScreen();
         }
 
 
@@ -89,18 +89,18 @@ public class GameScreen extends ScreenAdapter {
 
         ScreenUtils.clear(0, 0, 0, 0);
 
-        game.batch.begin();
+        batch.begin();
 
-        topWall.render(game.batch);
-        leftWall.render(game.batch);
-        rightWall.render(game.batch);
-        bottomWall.render(game.batch);
+        topWall.render(batch);
+        leftWall.render(batch);
+        rightWall.render(batch);
+        bottomWall.render(batch);
 
-        snake.render(game.batch);
+        snake.render(batch);
 
-        game.batch.draw(snakeFoodTexture, snakeFoodBody.x, snakeFoodBody.y, snakeFoodBody.width, snakeFoodBody.height);
+        batch.draw(snakeFoodTexture, snakeFoodBody.x, snakeFoodBody.y, snakeFoodBody.width, snakeFoodBody.height);
 
-        game.batch.end();
+        batch.end();
     }
 
 
@@ -118,11 +118,6 @@ public class GameScreen extends ScreenAdapter {
         snakeFoodBody.y = randomPosition.nextInt(maxPositionY - minPositionY) + minPositionY;
     }
 
-
-    public void gameOverScreen() {
-
-        game.setScreen(new MainMenuScreen(camera));
-    }
 
     @Override
     public void hide() {
