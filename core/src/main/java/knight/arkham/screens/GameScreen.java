@@ -4,132 +4,104 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import knight.arkham.SnakeGame;
-import knight.arkham.objects.Snake;
-import knight.arkham.objects.SnakeBody;
-import knight.arkham.objects.Wall;
+import knight.arkham.objects.Player;
+import knight.arkham.objects.Food;
+
 import java.util.Random;
 
-import static knight.arkham.helpers.Constants.*;
-
 public class GameScreen extends ScreenAdapter {
-
     private final SnakeGame game;
-
-    private final SpriteBatch batch;
-
     private final OrthographicCamera camera;
-
-    private final Texture snakeFoodTexture;
-    private final Rectangle snakeFoodBody;
-
-    private final Snake snake;
-
-    private final Wall topWall;
-    private final Wall bottomWall;
-    private final Wall rightWall;
-    private final Wall leftWall;
+    public SpriteBatch batch;
+    private final Player player;
+    private final Food food;
+    public static boolean isGamePaused;
 
     public GameScreen() {
 
         game = SnakeGame.INSTANCE;
+
         camera = game.camera;
 
         batch = new SpriteBatch();
 
-        snakeFoodTexture = new Texture("white.png");
-        snakeFoodBody = new Rectangle(400, 400, 32, 32);
+        player = new Player(new Rectangle(950, 600, 32, 32));
 
-        //poner siempre los objetos al final cuando se desee enviar un this, para asi asegurarnos que todos los elementos
-        //de nuestra pantalla esten instanciados
-        snake = new Snake(MID_SCREEN_WIDTH, MID_SCREEN_HEIGHT);
+        food = new Food(new Rectangle(800, 800, 32, 32));
 
-        topWall = new Wall(MID_SCREEN_WIDTH, FULL_SCREEN_HEIGHT, FULL_SCREEN_WIDTH, 16);
-        bottomWall = new Wall(MID_SCREEN_WIDTH, 0, FULL_SCREEN_WIDTH, 16);
-        rightWall = new Wall(FULL_SCREEN_WIDTH, MID_SCREEN_HEIGHT, 16, FULL_SCREEN_HEIGHT);
-        leftWall = new Wall(0, MID_SCREEN_HEIGHT, 16, FULL_SCREEN_HEIGHT);
-    }
-
-    private void update() {
-
-        snake.update();
-
-        Rectangle snakeHead = snake.getSnakeHeadBody();
-
-        if (snakeHead.overlaps(snakeFoodBody)) {
-
-            snakeFoodRandomPositionGenerator();
-
-            snake.getSnakeBodyParts().add(new SnakeBody(snake.getPosition().x, snake.getPosition().y,
-                    snake.getDirection().x, snake.getDirection().y));
-        }
-
-        if (snakeHead.overlaps(bottomWall.getWallBody()) || snakeHead.overlaps(topWall.getWallBody())
-                || snakeHead.overlaps(rightWall.getWallBody()) || snakeHead.overlaps(leftWall.getWallBody())){
-
-        }
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-
-            dispose();
-            Gdx.app.exit();
-        }
+        isGamePaused = false;
     }
 
     @Override
-    public void render(float delta) {
+    public void resize(int width, int height) {
+        game.viewport.update(width, height);
+    }
 
-        //la convencion es que el update se realice primero y luego se renderiza
-        update();
+    private void update(float deltaTime) {
+
+        player.update(deltaTime);
+
+        if (player.getBounds().overlaps(food.getBounds())) {
+
+            createFoodAtRandomPosition();
+        }
+    }
+
+    private void createFoodAtRandomPosition() {
+
+        Random randomPosition = new Random();
+
+        int minPositionX = 480;
+        int maxPositionX = 1410;
+
+        int minPositionY = 320;
+        int maxPositionY = 930;
+
+        food.getBounds().x = randomPosition.nextInt(maxPositionX - minPositionX) + minPositionX;
+        food.getBounds().y = randomPosition.nextInt(maxPositionY - minPositionY) + minPositionY;
+    }
+
+    @Override
+    public void render(float deltaTime) {
 
         ScreenUtils.clear(0, 0, 0, 0);
 
+        if (!isGamePaused) {
+
+            update(deltaTime);
+            draw();
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
+            isGamePaused = !isGamePaused;
+    }
+
+    private void draw() {
+
+        batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
 
-        topWall.render(batch);
-        leftWall.render(batch);
-        rightWall.render(batch);
-        bottomWall.render(batch);
+        player.draw(batch);
 
-        snake.render(batch);
-
-        batch.draw(snakeFoodTexture, snakeFoodBody.x, snakeFoodBody.y, snakeFoodBody.width, snakeFoodBody.height);
+        food.draw(batch);
 
         batch.end();
     }
 
-
-    private void snakeFoodRandomPositionGenerator() {
-
-        Random randomPosition = new Random();
-        //the max position is the difference between widthScreen or heightScreen and the width and height
-        int minPositionX = 10;
-        int maxPositionX = 928;
-
-        int minPositionY = 10;
-        int maxPositionY = 608;
-
-        snakeFoodBody.x = randomPosition.nextInt(maxPositionX - minPositionX) + minPositionX;
-        snakeFoodBody.y = randomPosition.nextInt(maxPositionY - minPositionY) + minPositionY;
-    }
-
-
     @Override
     public void hide() {
-
         dispose();
     }
 
     @Override
     public void dispose() {
 
-        snake.getSnakeTexture().dispose();
-        snakeFoodTexture.dispose();
-        topWall.getWallTexture().dispose();
+        batch.dispose();
+        food.dispose();
     }
 }

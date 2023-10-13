@@ -2,27 +2,19 @@ package knight.arkham;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import knight.arkham.screens.GameScreen;
 
 public class SnakeGame extends Game {
-
 	public static SnakeGame INSTANCE;
-
 	public OrthographicCamera camera;
 	public Viewport viewport;
 	public int screenWidth;
 	public int screenHeight;
 
 	public SnakeGame() {
-
 		INSTANCE = this;
 	}
 

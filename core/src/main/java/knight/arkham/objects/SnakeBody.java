@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class SnakeBody {
-
     private final Vector2 position;
     private final Vector2 direction;
     private final int height;
@@ -68,7 +67,4 @@ public class SnakeBody {
 
         batch.draw(snakeBodyTexture, position.x, position.y, width, height);
     }
-
-
-    public Texture getSnakeBodyTexture() { return snakeBodyTexture; }
 }

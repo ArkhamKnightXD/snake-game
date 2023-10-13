@@ -36,7 +36,7 @@ public class Snake {
 
         snakeTexture = new Texture("white.png");
 
-        this.snakeBodyParts = new Array<SnakeBody>();
+        this.snakeBodyParts = new Array<>();
     }
 
 
