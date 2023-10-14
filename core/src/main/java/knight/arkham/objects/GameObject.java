@@ -7,24 +7,26 @@ import com.badlogic.gdx.math.Rectangle;
 import knight.arkham.helpers.AssetsHelper;
 
 public abstract class GameObject {
-    protected final Rectangle actualBounds;
-    protected final Sound actionSound;
+    protected final Rectangle bounds;
+    private final Sound actionSound;
     private final Texture sprite;
 
-    protected GameObject(Rectangle bounds, String soundPath, String spritePath) {
-        actualBounds = bounds;
+    protected GameObject(Rectangle rectangle, String soundPath, String spritePath) {
+        bounds = rectangle;
         actionSound = AssetsHelper.loadSound(soundPath);
         sprite = new Texture(spritePath);
     }
 
     public void draw(Batch batch) {
 
-        batch.draw(sprite, actualBounds.x, actualBounds.y, actualBounds.width, actualBounds.height);
+        batch.draw(sprite, bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
     public Rectangle getBounds() {
-        return actualBounds;
+        return bounds;
     }
+
+    public void playActionSound() {actionSound.play();}
 
     public void dispose() {
         sprite.dispose();

@@ -39,10 +39,15 @@ public class Player extends GameObject {
             velocity.y = -speed;
         }
 
-        actualBounds.x += velocity.x * deltaTime;
-        actualBounds.y += velocity.y * deltaTime;
-
-        if (actualBounds.x > 1400)
-            velocity.set(0, 0);
+        bounds.x += velocity.x * deltaTime;
+        bounds.y += velocity.y * deltaTime;
     }
+
+    public boolean isPlayerInsideScreenBounds() {
+
+        return bounds.x > 1410 || bounds.x < 480 || bounds.y > 950 || bounds.y < 300;
+    }
+
+    public Vector2 getPosition() {return new Vector2(bounds.x, bounds.y);}
+    public Vector2 getVelocity() {return velocity;}
 }
