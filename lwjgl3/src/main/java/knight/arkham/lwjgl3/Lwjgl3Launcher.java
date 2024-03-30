@@ -18,7 +18,7 @@ public class Lwjgl3Launcher {
 		Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
 
 		configuration.setTitle("Snake");
-		configuration.setWindowedMode(960, 640);
+		configuration.setWindowedMode(750, 750);
 		configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
 
 		return configuration;

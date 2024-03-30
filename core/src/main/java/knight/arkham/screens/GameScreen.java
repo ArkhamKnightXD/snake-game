@@ -3,24 +3,19 @@ package knight.arkham.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import knight.arkham.SnakeGame;
-import knight.arkham.objects.Player;
+import knight.arkham.objects.Snake;
 import knight.arkham.objects.Food;
-import knight.arkham.objects.PlayerBody;
 
 import java.util.Random;
 
 public class GameScreen extends ScreenAdapter {
     private final SnakeGame game;
-    private final OrthographicCamera camera;
     public SpriteBatch batch;
-    private final Player player;
-    private final Array<PlayerBody> bodyParts;
+    private final Snake snake;
     private final Food food;
     public static boolean isGamePaused;
 
@@ -28,43 +23,18 @@ public class GameScreen extends ScreenAdapter {
 
         game = SnakeGame.INSTANCE;
 
-        camera = game.camera;
-
         batch = new SpriteBatch();
 
-        player = new Player(new Rectangle(950, 600, 32, 32));
-
-        bodyParts = new Array<>();
+        snake = new Snake(game.cellSize, game.cellCount);
 
         food = new Food(new Rectangle(800, 800, 32, 32));
 
         isGamePaused = false;
     }
 
-    @Override
-    public void resize(int width, int height) {
-        game.viewport.update(width, height);
-    }
-
     private void update(float deltaTime) {
 
-        player.update(deltaTime);
-
-        if (player.getBounds().overlaps(food.getBounds())) {
-
-            food.playActionSound();
-
-            createFoodAtRandomPosition();
-
-            bodyParts.add(new PlayerBody(new Rectangle(player.getBounds())));
-        }
-
-        int bodyPartsCounter = 0;
-
-        for(PlayerBody body : bodyParts) {
-            bodyPartsCounter++;
-            body.update(player.getPosition(), player.getVelocity(), bodyPartsCounter);
-        }
+        snake.update(deltaTime);
     }
 
     private void createFoodAtRandomPosition() {
@@ -86,7 +56,7 @@ public class GameScreen extends ScreenAdapter {
 
         ScreenUtils.clear(0, 0, 0, 0);
 
-        if (player.isPlayerInsideScreenBounds())
+        if (snake.isPlayerInsideScreenBounds())
             game.setScreen(new GameScreen());
 
         else if (!isGamePaused) {
@@ -101,16 +71,11 @@ public class GameScreen extends ScreenAdapter {
 
     private void draw() {
 
-        batch.setProjectionMatrix(camera.combined);
-
         batch.begin();
 
-        player.draw(batch);
+        snake.draw(batch);
 
-        for(PlayerBody body : bodyParts)
-            body.draw(batch);
-
-        food.draw(batch);
+//        food.draw(batch);
 
         batch.end();
     }
@@ -123,7 +88,6 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
 
-//        batch.dispose();
         food.dispose();
     }
 }

@@ -9,7 +9,7 @@ import knight.arkham.helpers.AssetsHelper;
 public abstract class GameObject {
     protected final Rectangle bounds;
     private final Sound actionSound;
-    private final Texture sprite;
+    protected final Texture sprite;
 
     protected GameObject(Rectangle rectangle, String soundPath, String spritePath) {
         bounds = rectangle;
@@ -26,7 +26,7 @@ public abstract class GameObject {
         return bounds;
     }
 
-    public void playActionSound() {actionSound.play();}
+//    public void playActionSound() {actionSound.play();}
 
     public void dispose() {
         sprite.dispose();
